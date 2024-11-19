@@ -4,8 +4,3 @@
 
 # Maven 编译输出目录
 target/
-
-# 环境配置文件
-application-*.yml
-# 示例配置文件
-!application-example.yml
