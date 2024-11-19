@@ -1,10 +1,9 @@
-package entity;
+package todonext.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -14,35 +13,48 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
+
+    @NotNull(message = "任务名称不能为空")
+    @Column(nullable = false)
     private String name;
+
     private String description;
-    private LocalDateTime deadline;
+
+    @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    private LocalDateTime deadline;
+
     private LocalDateTime completedAt;
-    
+
     @ManyToOne
     private Group group;
-    
-    @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL)
-    private List<Task> subTasks;
-    
+
     @ManyToMany
     private Set<Tag> tags;
-    
-    // Constructors
-    public Task() {
+
+    @OneToMany(mappedBy = "parentTask", cascade = CascadeType.ALL)
+    private List<Task> subTasks;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_task_id")
+    private Task parentTask;
+
+    // Constructors    
+    public Task(String name) {
+        this.name = name;
+        this.createdAt = LocalDateTime.now();
     }
-    
-    public Task(String name, String description, LocalDateTime deadline, LocalDateTime createdAt, LocalDateTime completedAt, Group group) {
+    // for test
+    public Task(String name, String description, LocalDateTime deadline, LocalDateTime createdAt, LocalDateTime completedAt, Group group, Set<Tag> tags, List<Task> subTasks) {
         this.name = name;
         this.description = description;
         this.deadline = deadline;
         this.createdAt = createdAt;
         this.completedAt = completedAt;
         this.group = group;
-        this.subTasks = new ArrayList<>();
-        this.tags = new HashSet<>();
+        this.tags = tags;
+        this.subTasks = subTasks;
     }
 
     // Getters
@@ -74,12 +86,12 @@ public class Task {
         return group;
     }
 
-    public List<Task> getSubTasks() {
-        return subTasks;
+    public Task getParentTask() {
+        return parentTask;
     }
 
-    public Set<Tag> getTags() {
-        return tags;
+    public List<Task> getSubTasks() {
+        return subTasks;
     }
 
     // Setters
@@ -111,11 +123,22 @@ public class Task {
         this.group = group;
     }
 
-    public void setSubTask(Task subTask) {
-        this.subTasks.add(subTask);
+    public void setParentTask(Task parentTask) {
+        this.parentTask = parentTask;
     }
 
-    public void setTag(Tag tag) {
-        this.tags.add(tag);
+    public void setSubTasks(List<Task> subTasks) {
+        this.subTasks = subTasks;
+    }
+
+    // 辅助方法
+    public void addSubTask(Task subTask) {
+        subTasks.add(subTask);
+        subTask.setParentTask(this);
+    }
+
+    public void removeSubTask(Task subTask) {
+        subTasks.remove(subTask);
+        subTask.setParentTask(null);
     }
 } 

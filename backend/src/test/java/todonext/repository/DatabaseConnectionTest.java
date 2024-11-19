@@ -1,17 +1,17 @@
-package example;
+package todonext.repository;
+
+import todonext.TodoNextApplication;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-@SpringBootTest
-class DatabaseConnectionTest {
+@SpringBootTest(classes = TodoNextApplication.class)
+public class DatabaseConnectionTest {
     @Autowired
     private DataSource dataSource;
 
