@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tasks</title>
+</head>
+<body>
+    <h1>Monthly Tasks</h1>
+    
+    <!-- 当前月份显示 -->
+    <h2 th:text="${#temporals.format(#temporals.createNow(), 'yyyy年MM月')}">2024年3月</h2>
+    
+    <!-- 按日期显示任务 -->
+    <div th:each="entry : ${monthlyTasks}">
+        <h3 th:text="${#temporals.format(entry.key, 'MM月dd日')}">03月21日</h3>
+        <ul>
+            <li th:each="task : ${entry.value}">
+                <span th:text="${task.name}">任务名称</span>
+                <small th:if="${task.description}" 
+                       th:text="${task.description}">任务描述</small>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 如果没有任务 -->
+    <p th:if="${#maps.isEmpty(monthlyTasks)}">本月暂无任务</p>
+</body>
+</html>
