@@ -10,10 +10,18 @@ const TodoList = {
                     >
                         {{ viewMode === 'list' ? '📅 月历视图' : '📝 列表视图' }}
                     </button>
-                    <button @click="showSettingsModal = true" class="settings-btn">
-                        ⚙️ 设置
+                    <button
+                        class="categories-btn"
+                        @click="showCategoriesModal = true" 
+                    >
+                        ⚙️ 管理分类
                     </button>
-                    <button @click="showCreateModal = true">创建待办</button>
+                    <button
+                        class="create-btn"
+                        @click="showCreateModal = true"
+                    >
+                        ✏️ 创建待办
+                    </button>
                 </div>
             </div>
 
@@ -21,7 +29,7 @@ const TodoList = {
             <template v-if="viewMode === 'list'">
                 <!-- 筛选器 -->
                 <div class="filters">
-                    <div class="filter-group">
+                    <div class="filter-completed">
                         <button 
                             :class="{ active: currentFilter === 'all' }"
                             @click="setFilter('all')"
@@ -41,7 +49,7 @@ const TodoList = {
                             已完成
                         </button>
                     </div>
-                    <div class="group-filter">
+                    <div class="filter-group">
                         <select v-model="currentGroup">
                             <option value="">所有分组</option>
                             <option v-for="group in groups" :value="group">
@@ -70,6 +78,22 @@ const TodoList = {
                 @view="viewTodo"
             ></calendar-view>
 
+            <!-- 管理分类模态框 -->
+            <modal
+                :show="showCategoriesModal" 
+                title="管理分类"
+                @close="showCategoriesModal = false"
+            >
+                <categories-panel
+                    :groups="groups"
+                    :tags="tags"
+                    :tag-colors="tagColors"
+                    @update-groups="updateGroups"
+                    @update-tags="updateTags"
+                    @close="showCategoriesModal = false"
+                />
+            </modal>
+
             <!-- 创建待办模态框 -->
             <modal 
                 :show="showCreateModal" 
@@ -78,10 +102,9 @@ const TodoList = {
             >
                 <todo-form
                     :todo="null"
-                    :is-editing="false"
-                    :tag-colors="tagColors"
                     :groups="groups"
-                    :available-tags="availableTags"
+                    :tags="tags"
+                    :tag-colors="tagColors"
                     @save="saveTodo"
                     @cancel="closeCreateModal"
                 />
@@ -96,28 +119,11 @@ const TodoList = {
                 <todo-form
                     v-if="currentTodo"
                     :todo="currentTodo"
-                    :is-editing="true"
-                    :tag-colors="tagColors"
                     :groups="groups"
-                    :available-tags="availableTags"
+                    :tags="tags"
+                    :tag-colors="tagColors"
                     @save="saveTodo"
                     @cancel="closeViewModal"
-                />
-            </modal>
-
-            <!-- 设置模态框 -->
-            <modal 
-                :show="showSettingsModal" 
-                title="设置"
-                @close="showSettingsModal = false"
-            >
-                <settings-panel
-                    :groups="groups"
-                    :available-tags="availableTags"
-                    :tag-colors="tagColors"
-                    @update-groups="updateGroups"
-                    @update-tags="updateTags"
-                    @close="showSettingsModal = false"
                 />
             </modal>
         </div>
@@ -126,15 +132,17 @@ const TodoList = {
         return {
             todos: JSON.parse(localStorage.getItem('todos') || '[]'),
             groups: JSON.parse(localStorage.getItem('groups') || '["工作", "学习", "生活", "其他"]'),
-            availableTags: JSON.parse(localStorage.getItem('availableTags') || '["重要", "工作", "个人", "学习"]'),
-            tagColors: JSON.parse(localStorage.getItem('tagColors') || '{"重要":"#ff4d4f","工作":"#1890ff","个人":"#52c41a","学习":"#722ed1"}'),
+            tags: JSON.parse(localStorage.getItem('tags') || '["重要", "长期"]'),
+            tagColors: JSON.parse(localStorage.getItem('tagColors') || '{"重要":"#ff4d4f","长期":"#1890ff"}'),
             currentTodo: null,
+            // modal
             showCreateModal: false,
             showViewModal: false,
-            isEditing: false,
-            currentGroup: '',
+            showCategoriesModal: false,
+            // filter
             currentFilter: 'all',
-            showSettingsModal: false,
+            currentGroup: '',
+            // view
             viewMode: 'list' // 'list' 或 'calendar'
         }
     },
@@ -159,19 +167,7 @@ const TodoList = {
         }
     },
     methods: {
-        addTag(tag, color) {
-            if (!this.availableTags.includes(tag)) {
-                this.availableTags.push(tag)
-            }
-            if (color) {
-                this.tagColors[tag] = color
-            }
-        },
-        addGroup(group) {
-            if (!this.groups.includes(group)) {
-                this.groups.push(group)
-            }
-        },
+        // todo
         saveTodo(formData) {
             if (this.currentTodo) {
                 // 编辑现有待办
@@ -199,33 +195,41 @@ const TodoList = {
             this.currentTodo = { ...todo }
             this.showViewModal = true
         },
-        editTodo(todo) {
-            this.currentTodo = todo
-            this.isEditing = true
-            this.showViewModal = false
-            this.showCreateModal = true
-        },
         deleteTodo(todo) {
             const index = this.todos.findIndex(t => t.id === todo.id)
             if (index !== -1) {
                 this.todos.splice(index, 1)
             }
         },
+        toggleTodo(todo) {
+            const index = this.todos.findIndex(t => t.id === todo.id)
+            if (index !== -1) {
+                // 切换完成状态
+                this.todos[index].completed = !this.todos[index].completed
+            }
+        },
+        // modal
         closeCreateModal() {
             this.showCreateModal = false
             this.currentTodo = null
-            this.isEditing = false
         },
         closeViewModal() {
             this.showViewModal = false
             this.currentTodo = null
         },
-        formatDeadline(deadline) {
-            if (!deadline) return '无'
-            return new Date(deadline).toLocaleString('zh-CN')
+        // group & tag
+        addGroup(group) {
+            if (!this.groups.includes(group)) {
+                this.groups.push(group)
+            }
         },
-        getTagColor(tag) {
-            return this.tagColors[tag] || '#666666'
+        addTag(tag, color) {
+            if (!this.tags.includes(tag)) {
+                this.tags.push(tag)
+            }
+            if (color) {
+                this.tagColors[tag] = color
+            }
         },
         updateGroups(newGroups, renamedGroups = {}) {
             // 保存新的分组列表
@@ -234,7 +238,6 @@ const TodoList = {
             // 更新所有任务的分组
             this.todos = this.todos.map(todo => {
                 if (!todo.group) return todo
-                
                 // 如果是重命名的分组，更新为新名称
                 if (renamedGroups[todo.group]) {
                     return {
@@ -242,7 +245,6 @@ const TodoList = {
                         group: renamedGroups[todo.group]
                     }
                 }
-                
                 // 如果分组被删除，将分组设为空
                 if (!newGroups.includes(todo.group)) {
                     return {
@@ -250,23 +252,19 @@ const TodoList = {
                         group: ''
                     }
                 }
-                
+
                 return todo
             })
         },
-        
-        updateTags({ tags, colors, renamedTags = {} }) {
+        updateTags(tags, colors, renamedTags = {}) {
             // 保存新的标签和颜色
-            this.availableTags = [...tags]
+            this.tags = [...tags]
             this.tagColors = { ...colors }
             
             // 更新所有任务的标签
             this.todos = this.todos.map(todo => {
-                if (!todo.tags) {
-                    todo.tags = []
-                }
-                
-                // 更新标签名称
+                if (!todo.tags) todo.tags = []
+                // 更新任务的所有标签
                 const updatedTags = todo.tags.map(tag => {
                     // 如果是重命名的标签，使用新名称
                     if (renamedTags[tag]) {
@@ -286,37 +284,10 @@ const TodoList = {
                 }
             })
         },
-
-        // 可选：添加一个方法来显示更改提示
-        showUpdateNotification() {
-            // 如果你想添加一个提示，可以使用这个方法
-            const notification = document.createElement('div')
-            notification.className = 'notification'
-            notification.textContent = '已更新相关任务'
-            document.body.appendChild(notification)
-            
-            setTimeout(() => {
-                notification.classList.add('fade-out')
-                setTimeout(() => {
-                    document.body.removeChild(notification)
-                }, 300)
-            }, 2000)
-        },
-
-        // 添加切换完成状态的方法
-        toggleTodo(todo) {
-            const index = this.todos.findIndex(t => t.id === todo.id)
-            if (index !== -1) {
-                this.todos[index].completed = !this.todos[index].completed
-            }
-        },
-
-        // 添加切换筛选器的方法
+        // filter
         setFilter(filter) {
             this.currentFilter = filter
         },
-
-        // 添加切换分组的方法
         setGroup(group) {
             this.currentGroup = group
         }
@@ -334,9 +305,9 @@ const TodoList = {
             },
             deep: true
         },
-        availableTags: {
+        tags: {
             handler(newTags) {
-                localStorage.setItem('availableTags', JSON.stringify(newTags))
+                localStorage.setItem('tags', JSON.stringify(newTags))
             },
             deep: true
         },

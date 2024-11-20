@@ -1,0 +1,55 @@
+.filters {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.filter-completed {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-completed button {
+    padding: 6px 12px;
+    border: 1px solid #FFE6D9;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #FF9966;
+    transition: all 0.3s ease;
+}
+
+.filter-completed button:hover {
+    border-color: #FFB088;
+    color: #FF8547;
+    background-color: #FFF5F0;
+}
+
+.filter-completed button.active {
+    background: #FF9966;
+    border-color: #FF9966;
+    color: white;
+    box-shadow: 0 2px 8px rgba(255, 153, 102, 0.2);
+}
+
+.filter-group select {
+    padding: 6px 12px;
+    border: 1px solid #FFE6D9;
+    border-radius: 4px;
+    color: #FF9966;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-group select:hover {
+    border-color: #FFB088;
+    background-color: #FFF5F0;
+}
+
+.filter-group select:focus {
+    border-color: #FF9966;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 153, 102, 0.2);
+}

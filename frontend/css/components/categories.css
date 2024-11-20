@@ -1,0 +1,65 @@
+.categories-panel {
+    padding: 20px;
+}
+
+.categories-tabs {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.categories-tabs button {
+    padding: 8px 16px;
+    background: #f5f5f5;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.categories-tabs button.active {
+    background: #1890ff;
+    color: white;
+}
+
+.categories-content {
+    margin-bottom: 20px;
+}
+
+.categories-panel input[type="text"],
+.categories-panel input[type="color"] {
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.categories-panel input[type="text"] {
+    min-width: 200px;
+}
+
+.categories-panel .item input[type="text"] {
+    flex: 1;
+}
+
+.categories-panel button.primary {
+    background: #1890ff;
+}
+
+.categories-panel button.primary:hover {
+    background: #40a9ff;
+}
+
+.categories-panel button.cancel {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.categories-panel button.cancel:hover {
+    background: #e8e8e8;
+}
+
+.categories-panel button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}

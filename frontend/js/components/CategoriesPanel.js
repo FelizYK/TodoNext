@@ -1,13 +1,13 @@
-const SettingsPanel = {
+const CategoriesPanel = {
     props: {
         groups: Array,
-        availableTags: Array,
+        tags: Array,
         tagColors: Object
     },
     data() {
         return {
             editingGroups: [...this.groups],
-            editingTags: this.availableTags.map(tag => ({
+            editingTags: this.tags.map(tag => ({
                 name: tag,
                 color: this.tagColors[tag] || '#666666'
             })),
@@ -24,7 +24,7 @@ const SettingsPanel = {
     },
     created() {
         this.originalGroups = [...this.groups]
-        this.originalTags = this.availableTags.map(tag => ({
+        this.originalTags = this.tags.map(tag => ({
             name: tag,
             color: this.tagColors[tag]
         }))
@@ -109,8 +109,8 @@ const SettingsPanel = {
         }
     },
     template: `
-        <div class="settings-panel">
-            <div class="settings-tabs">
+        <div class="categories-panel">
+            <div class="categories-tabs">
                 <button 
                     :class="{ active: activeTab === 'groups' }"
                     @click="activeTab = 'groups'"
@@ -126,7 +126,7 @@ const SettingsPanel = {
             </div>
 
             <!-- 分组管理 -->
-            <div v-if="activeTab === 'groups'" class="settings-content">
+            <div v-if="activeTab === 'groups'" class="categories-content">
                 <div class="add-item">
                     <input 
                         v-model="newGroupName"
@@ -150,7 +150,7 @@ const SettingsPanel = {
             </div>
 
             <!-- 标签管理 -->
-            <div v-if="activeTab === 'tags'" class="settings-content">
+            <div v-if="activeTab === 'tags'" class="categories-content">
                 <div class="add-item">
                     <input 
                         v-model="newTagName"
@@ -180,7 +180,7 @@ const SettingsPanel = {
                 </div>
             </div>
 
-            <div class="settings-actions">
+            <div class="categories-actions">
                 <button 
                     class="primary save-btn" 
                     @click="saveAndClose"
