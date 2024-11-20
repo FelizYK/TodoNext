@@ -24,6 +24,7 @@ const TodoForm = {
                     v-model="formData.text" 
                     placeholder="待办事项标题..."
                     required
+                    :class="{ 'view-mode': isEditing }"
                 >
             </div>
 
@@ -32,56 +33,32 @@ const TodoForm = {
                 <input 
                     type="datetime-local"
                     v-model="formData.deadline"
+                    :class="{ 'view-mode': isEditing }"
                 >
             </div>
 
             <div class="form-group">
                 <label>分组</label>
-                <div class="group-input">
-                    <select v-model="formData.group">
-                        <option value="">选择分组...</option>
-                        <option v-for="group in groups" :value="group">{{ group }}</option>
-                        <option value="__new__">+ 创建新分组</option>
-                    </select>
-                    <!-- 新分组输入框 -->
-                    <div v-if="showNewGroupInput" class="new-input-container">
-                        <input 
-                            type="text"
-                            v-model="newGroup"
-                            placeholder="输入新分组名称"
-                            @keyup.enter="addNewGroup"
-                        >
-                        <button type="button" @click="addNewGroup">添加</button>
-                        <button type="button" class="cancel" @click="cancelNewGroup">取消</button>
-                    </div>
-                </div>
+                <select 
+                    v-model="formData.group"
+                    :class="{ 'view-mode': isEditing }"
+                >
+                    <option value="">选择分组...</option>
+                    <option v-for="group in groups" :value="group">{{ group }}</option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label>标签</label>
                 <div class="tags-input">
                     <div class="tag-select">
-                        <select v-model="selectedTag">
+                        <select 
+                            v-model="selectedTag"
+                            :class="{ 'view-mode': isEditing }"
+                        >
                             <option value="">选择标签...</option>
                             <option v-for="tag in availableTags" :value="tag">{{ tag }}</option>
-                            <option value="__new__">+ 创建新标签</option>
                         </select>
-                        <!-- 新标签输入框 -->
-                        <div v-if="showNewTagInput" class="new-input-container">
-                            <input 
-                                type="text"
-                                v-model="newTag"
-                                placeholder="输入新标签名称"
-                                @keyup.enter="addNewTag"
-                            >
-                            <input 
-                                type="color"
-                                v-model="newTagColor"
-                                title="选择标签颜色"
-                            >
-                            <button type="button" @click="addNewTag">添加</button>
-                            <button type="button" class="cancel" @click="cancelNewTag">取消</button>
-                        </div>
                     </div>
                     <div class="selected-tags">
                         <span 
@@ -90,23 +67,25 @@ const TodoForm = {
                             :style="{ backgroundColor: getTagColor(tag) }"
                             @click="removeTag(tag)"
                         >
-                            {{ tag }} ×
+                            {{ tag }}
+                            <span class="remove-tag">×</span>
                         </span>
                     </div>
                 </div>
             </div>
 
             <div class="form-group">
-                <label>详细描述</label>
+                <label>描述</label>
                 <textarea 
                     v-model="formData.description"
-                    placeholder="详细描述..."
-                    rows="5"
+                    rows="4"
+                    placeholder="添加详细描述..."
+                    :class="{ 'view-mode': isEditing }"
                 ></textarea>
             </div>
 
             <div class="form-actions">
-                <button type="button" @click="saveTodo">{{ isEditing ? '保存' : '创建' }}</button>
+                <button type="submit" class="primary">保存</button>
                 <button type="button" class="cancel" @click="$emit('cancel')">取消</button>
             </div>
         </form>

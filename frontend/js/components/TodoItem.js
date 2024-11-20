@@ -11,12 +11,14 @@ const TodoItem = {
             <div class="todo-main">
                 <input 
                     type="checkbox" 
-                    v-model="todo.completed"
-                    @click.stop
+                    :checked="todo.completed"
+                    @click.stop="$emit('toggle', todo)"
                 >
                 <div class="todo-content">
                     <div class="todo-header">
-                        <span :class="{ completed: todo.completed }">{{ todo.text }}</span>
+                        <span class="todo-text" :class="{ completed: todo.completed }">
+                            {{ todo.text }}
+                        </span>
                         <div class="todo-tags">
                             <span 
                                 v-for="tag in todo.tags" 
@@ -27,44 +29,36 @@ const TodoItem = {
                             </span>
                         </div>
                     </div>
-                    <div class="todo-info">
-                        <span class="group" v-if="todo.group">📁 {{ todo.group }}</span>
-                        <span class="deadline" :class="{ 'deadline-near': isDeadlineNear }">
-                            ⏰ {{ formatDeadline }}
+                    <div class="todo-footer">
+                        <span v-if="todo.group" class="todo-group">{{ todo.group }}</span>
+                        <span v-if="todo.deadline" class="todo-deadline">
+                            截止: {{ formatDate(todo.deadline) }}
                         </span>
-                    </div>
-                    <div class="todo-description" v-if="todo.description">
-                        {{ todo.description }}
                     </div>
                 </div>
             </div>
-            <div class="todo-actions">
-                <button @click="$emit('edit', todo)">编辑</button>
-                <button class="delete" @click="$emit('delete', todo.id)">删除</button>
-            </div>
+            <button 
+                class="delete-btn" 
+                @click.stop="confirmDelete"
+                title="删除"
+            >
+                ×
+            </button>
         </div>
     `,
-    computed: {
-        formatDeadline() {
-            if (!this.todo.deadline) return '无截止日期'
-            return new Date(this.todo.deadline).toLocaleString('zh-CN', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            })
-        },
-        isDeadlineNear() {
-            if (!this.todo.deadline) return false
-            const deadline = new Date(this.todo.deadline)
-            const now = new Date()
-            const diff = deadline - now
-            return diff > 0 && diff < 24 * 60 * 60 * 1000 // 24小时内
-        }
-    },
     methods: {
+        formatDate(date) {
+            if (!date) return ''
+            const d = new Date(date)
+            return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+        },
         getTagColor(tag) {
             return this.tagColors[tag] || '#666666'
+        },
+        confirmDelete() {
+            if (confirm('确定要删除这个待办事项吗？')) {
+                this.$emit('delete', this.todo)
+            }
         }
     }
 }

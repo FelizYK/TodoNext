@@ -13,15 +13,34 @@ const TodoList = {
 
             <!-- 筛选器 -->
             <div class="filters">
-                <select v-model="currentGroup">
-                    <option value="">所有分组</option>
-                    <option v-for="group in groups" :value="group">{{ group }}</option>
-                </select>
-                <select v-model="currentFilter">
-                    <option value="all">全部</option>
-                    <option value="active">未完成</option>
-                    <option value="completed">已完成</option>
-                </select>
+                <div class="filter-group">
+                    <button 
+                        :class="{ active: currentFilter === 'all' }"
+                        @click="setFilter('all')"
+                    >
+                        全部
+                    </button>
+                    <button 
+                        :class="{ active: currentFilter === 'active' }"
+                        @click="setFilter('active')"
+                    >
+                        未完成
+                    </button>
+                    <button 
+                        :class="{ active: currentFilter === 'completed' }"
+                        @click="setFilter('completed')"
+                    >
+                        已完成
+                    </button>
+                </div>
+                <div class="group-filter">
+                    <select v-model="currentGroup">
+                        <option value="">所有分组</option>
+                        <option v-for="group in groups" :value="group">
+                            {{ group }}
+                        </option>
+                    </select>
+                </div>
             </div>
 
             <!-- 待办列表 -->
@@ -31,57 +50,43 @@ const TodoList = {
                 :todo="todo"
                 :tag-colors="tagColors"
                 @view="viewTodo"
+                @toggle="toggleTodo"
                 @delete="deleteTodo"
-                @edit="editTodo"
             ></todo-item>
 
             <!-- 创建待办模态框 -->
             <modal 
                 :show="showCreateModal" 
-                :title="isEditing ? '编辑待办' : '创建待办'"
+                title="创建待办"
                 @close="closeCreateModal"
             >
                 <todo-form
-                    :todo="currentTodo"
-                    :is-editing="isEditing"
+                    :todo="null"
+                    :is-editing="false"
                     :tag-colors="tagColors"
                     :groups="groups"
                     :available-tags="availableTags"
                     @save="saveTodo"
-                    @add-tag="addTag"
-                    @add-group="addGroup"
                     @cancel="closeCreateModal"
                 />
             </modal>
 
-            <!-- 查看详情模态框 -->
+            <!-- 详情/编辑模态框 -->
             <modal 
                 :show="showViewModal" 
-                title="待办详情"
+                :title="currentTodo ? currentTodo.text : ''"
                 @close="closeViewModal"
             >
-                <div class="todo-detail" v-if="currentTodo">
-                    <h3>{{ currentTodo.text }}</h3>
-                    <div class="detail-info">
-                        <p><strong>截止日期：</strong>{{ formatDeadline(currentTodo.deadline) }}</p>
-                        <p><strong>分组：</strong>{{ currentTodo.group || '无' }}</p>
-                        <p><strong>标签：</strong>
-                            <span 
-                                v-for="tag in currentTodo.tags" 
-                                class="tag"
-                                :style="{ backgroundColor: getTagColor(tag) }"
-                            >
-                                {{ tag }}
-                            </span>
-                        </p>
-                        <p><strong>描述：</strong></p>
-                        <p class="description">{{ currentTodo.description || '无' }}</p>
-                    </div>
-                    <div class="detail-actions">
-                        <button @click="editTodo(currentTodo)">编辑</button>
-                        <button class="delete" @click="deleteTodo(currentTodo.id)">删除</button>
-                    </div>
-                </div>
+                <todo-form
+                    v-if="currentTodo"
+                    :todo="currentTodo"
+                    :is-editing="true"
+                    :tag-colors="tagColors"
+                    :groups="groups"
+                    :available-tags="availableTags"
+                    @save="saveTodo"
+                    @cancel="closeViewModal"
+                />
             </modal>
 
             <!-- 设置模态框 -->
@@ -118,19 +123,22 @@ const TodoList = {
     },
     computed: {
         filteredTodos() {
-            return this.todos
-                .filter(todo => {
-                    if (this.currentGroup && todo.group !== this.currentGroup) return false
-                    if (this.currentFilter === 'active') return !todo.completed
-                    if (this.currentFilter === 'completed') return todo.completed
-                    return true
-                })
-                .sort((a, b) => {
-                    if (a.deadline && b.deadline) {
-                        return new Date(a.deadline) - new Date(b.deadline)
-                    }
-                    return b.id - a.id
-                })
+            // 首先按完成状态筛选
+            let result = this.todos.filter(todo => {
+                if (this.currentFilter === 'completed') {
+                    return todo.completed
+                } else if (this.currentFilter === 'active') {
+                    return !todo.completed
+                }
+                return true // 'all' 状态返回所有待办
+            })
+
+            // 然后按分组筛选
+            if (this.currentGroup) {
+                result = result.filter(todo => todo.group === this.currentGroup)
+            }
+
+            return result
         }
     },
     methods: {
@@ -148,17 +156,8 @@ const TodoList = {
             }
         },
         saveTodo(formData) {
-            if (formData.newTags) {
-                formData.newTags.forEach(({tag, color}) => {
-                    this.addTag(tag, color)
-                })
-            }
-            
-            if (formData.group && !this.groups.includes(formData.group)) {
-                this.groups.push(formData.group)
-            }
-
-            if (this.isEditing) {
+            if (this.currentTodo) {
+                // 编辑现有待办
                 const index = this.todos.findIndex(t => t.id === this.currentTodo.id)
                 if (index !== -1) {
                     this.todos[index] = {
@@ -167,16 +166,20 @@ const TodoList = {
                     }
                 }
             } else {
+                // 创建新待办
                 this.todos.push({
                     id: Date.now(),
                     completed: false,
                     ...formData
                 })
             }
+            
+            // 关闭所有模态框
+            this.closeViewModal()
             this.closeCreateModal()
         },
         viewTodo(todo) {
-            this.currentTodo = todo
+            this.currentTodo = { ...todo }
             this.showViewModal = true
         },
         editTodo(todo) {
@@ -185,9 +188,11 @@ const TodoList = {
             this.showViewModal = false
             this.showCreateModal = true
         },
-        deleteTodo(id) {
-            this.todos = this.todos.filter(todo => todo.id !== id)
-            this.closeViewModal()
+        deleteTodo(todo) {
+            const index = this.todos.findIndex(t => t.id === todo.id)
+            if (index !== -1) {
+                this.todos.splice(index, 1)
+            }
         },
         closeCreateModal() {
             this.showCreateModal = false
@@ -279,6 +284,24 @@ const TodoList = {
                     document.body.removeChild(notification)
                 }, 300)
             }, 2000)
+        },
+
+        // 添加切换完成状态的方法
+        toggleTodo(todo) {
+            const index = this.todos.findIndex(t => t.id === todo.id)
+            if (index !== -1) {
+                this.todos[index].completed = !this.todos[index].completed
+            }
+        },
+
+        // 添加切换筛选器的方法
+        setFilter(filter) {
+            this.currentFilter = filter
+        },
+
+        // 添加切换分组的方法
+        setGroup(group) {
+            this.currentGroup = group
         }
     },
     watch: {
