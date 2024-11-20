@@ -1,0 +1,128 @@
+/* 表单样式 */
+.todo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 24px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(255, 153, 153, 0.1);
+}
+
+/* 表单组 */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #FF9999;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #FFE5E5;
+    border-radius: 8px;
+    color: #666;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #FF9999;
+    box-shadow: 0 0 0 3px rgba(255, 153, 153, 0.1);
+}
+
+.form-group input:hover,
+.form-group select:hover,
+.form-group textarea:hover {
+    border-color: #FFB3B3;
+}
+
+.form-group .tags-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group .tags-input .tag-select {
+    margin-bottom: 8px;
+}
+
+.form-group .tags-input .selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.form-group .tags-input .selected-tags .remove-tag {
+    margin-left: 6px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.form-group .tags-input .selected-tags .remove-tag:hover {
+    opacity: 1;
+}
+
+/* 按钮 */
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.form-actions button {
+    padding: 8px 24px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+/* 保存按钮 */
+.save-btn {
+    background-color: #FF9999;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #FF8080;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(255, 153, 153, 0.3);
+}
+
+.save-btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 取消按钮 */
+.cancel-btn {
+    background-color: white;
+    border: 1px solid #FFE5E5;
+    color: #FF9999;
+}
+
+.cancel-btn:hover {
+    background-color: #FFF5F5;
+    border-color: #FF9999;
+    transform: translateY(-1px);
+}
+
+.cancel-btn:active {
+    transform: translateY(0);
+}
