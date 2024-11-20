@@ -15,14 +15,14 @@ const TodoItem = {
                     @click.stop="$emit('toggle', todo)"
                     :title="todo.completed ? '标记为未完成' : '标记为已完成'"
                 >
-                    ✓
+                    ✔
                 </button>
-                <div class="todo-content">
+                <div class="todo-content" :class="{ completed: todo.completed }">
                     <div class="todo-header">
-                        <span class="todo-text" :class="{ completed: todo.completed }">
+                        <span class="todo-text">
                             {{ todo.text }}
                         </span>
-                        <div class="todo-tags">
+                        <div>
                             <span 
                                 v-for="tag in todo.tags" 
                                 class="tag"
@@ -32,10 +32,12 @@ const TodoItem = {
                             </span>
                         </div>
                     </div>
-                    <div class="todo-footer">
-                        <span v-if="todo.group" class="todo-group">{{ todo.group }}</span>
+                    <div>
+                        <span v-if="todo.group" class="todo-group">
+                            📁 {{ todo.group }}
+                        </span>
                         <span v-if="todo.deadline" class="todo-deadline">
-                            截止: {{ formatDate(todo.deadline) }}
+                            ⏰ 截止: {{ formatDate(todo.deadline) }}
                         </span>
                     </div>
                 </div>
@@ -45,7 +47,7 @@ const TodoItem = {
                 @click.stop="confirmDelete"
                 title="删除"
             >
-                ×
+                ✖
             </button>
         </div>
     `,
