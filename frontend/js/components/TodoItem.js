@@ -9,11 +9,14 @@ const TodoItem = {
     template: `
         <div class="todo-item" @click="$emit('view', todo)">
             <div class="todo-main">
-                <input 
-                    type="checkbox" 
-                    :checked="todo.completed"
+                <button 
+                    class="complete-btn"
+                    :class="{ completed: todo.completed }"
                     @click.stop="$emit('toggle', todo)"
+                    :title="todo.completed ? '标记为未完成' : '标记为已完成'"
                 >
+                    ✓
+                </button>
                 <div class="todo-content">
                     <div class="todo-header">
                         <span class="todo-text" :class="{ completed: todo.completed }">

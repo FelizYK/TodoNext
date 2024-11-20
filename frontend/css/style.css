@@ -33,6 +33,11 @@
     transition: all 0.3s ease;
 }
 
+.todo-item:hover {
+    border-color: #e6f7ff;
+    background-color: #f0f7ff;
+}
+
 .todo-main {
     display: flex;
     align-items: center;
@@ -688,4 +693,79 @@ button.primary:hover {
 
 .view-toggle {
     margin-right: 10px;
+}
+
+/* 完成按钮样式 */
+.complete-btn {
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: 2px solid #ddd;
+    color: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin-right: 12px;
+    transition: all 0.3s ease;
+}
+
+.complete-btn:hover {
+    border-color: #4CAF50;
+    color: #4CAF50;
+    background: transparent;
+}
+
+.complete-btn.completed {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+}
+
+/* 删除按钮特殊样式 */
+.todo-item .delete-btn {
+    padding: 4px 8px;
+    background: transparent;
+    color: #999;
+    font-size: 20px;
+}
+
+.todo-item .delete-btn:hover {
+    background-color: #ff4d4f;
+    color: white;
+}
+
+/* 其他待办项样式保持不变 */
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+    border-color: #e6f7ff;
+    background-color: #f0f7ff;
+}
+
+.todo-main {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.todo-content {
+    flex: 1;
+}
+
+.todo-text.completed {
+    text-decoration: line-through;
+    color: #999;
 }
