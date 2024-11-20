@@ -74,7 +74,6 @@ const TodoList = {
             <calendar-view
                 v-else
                 :todos="todos"
-                :tag-colors="tagColors"
                 @view="viewTodo"
             ></calendar-view>
 
