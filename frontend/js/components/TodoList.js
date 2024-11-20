@@ -4,6 +4,12 @@ const TodoList = {
             <div class="header">
                 <h1>待办事项</h1>
                 <div class="header-actions">
+                    <button 
+                        class="view-toggle"
+                        @click="viewMode = viewMode === 'list' ? 'calendar' : 'list'"
+                    >
+                        {{ viewMode === 'list' ? '📅 月历视图' : '📝 列表视图' }}
+                    </button>
                     <button @click="showSettingsModal = true" class="settings-btn">
                         ⚙️ 设置
                     </button>
@@ -11,48 +17,58 @@ const TodoList = {
                 </div>
             </div>
 
-            <!-- 筛选器 -->
-            <div class="filters">
-                <div class="filter-group">
-                    <button 
-                        :class="{ active: currentFilter === 'all' }"
-                        @click="setFilter('all')"
-                    >
-                        全部
-                    </button>
-                    <button 
-                        :class="{ active: currentFilter === 'active' }"
-                        @click="setFilter('active')"
-                    >
-                        未完成
-                    </button>
-                    <button 
-                        :class="{ active: currentFilter === 'completed' }"
-                        @click="setFilter('completed')"
-                    >
-                        已完成
-                    </button>
+            <!-- 列表视图 -->
+            <template v-if="viewMode === 'list'">
+                <!-- 筛选器 -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <button 
+                            :class="{ active: currentFilter === 'all' }"
+                            @click="setFilter('all')"
+                        >
+                            全部
+                        </button>
+                        <button 
+                            :class="{ active: currentFilter === 'active' }"
+                            @click="setFilter('active')"
+                        >
+                            未完成
+                        </button>
+                        <button 
+                            :class="{ active: currentFilter === 'completed' }"
+                            @click="setFilter('completed')"
+                        >
+                            已完成
+                        </button>
+                    </div>
+                    <div class="group-filter">
+                        <select v-model="currentGroup">
+                            <option value="">所有分组</option>
+                            <option v-for="group in groups" :value="group">
+                                {{ group }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
-                <div class="group-filter">
-                    <select v-model="currentGroup">
-                        <option value="">所有分组</option>
-                        <option v-for="group in groups" :value="group">
-                            {{ group }}
-                        </option>
-                    </select>
-                </div>
-            </div>
+                <!-- 待办列表 -->
+                <todo-item
+                    v-for="todo in filteredTodos"
+                    :key="todo.id"
+                    :todo="todo"
+                    :tag-colors="tagColors"
+                    @view="viewTodo"
+                    @toggle="toggleTodo"
+                    @delete="deleteTodo"
+                ></todo-item>
+            </template>
 
-            <!-- 待办列表 -->
-            <todo-item
-                v-for="todo in filteredTodos"
-                :key="todo.id"
-                :todo="todo"
+            <!-- 月历视图 -->
+            <calendar-view
+                v-else
+                :todos="todos"
                 :tag-colors="tagColors"
                 @view="viewTodo"
-                @toggle="toggleTodo"
-                @delete="deleteTodo"
-            ></todo-item>
+            ></calendar-view>
 
             <!-- 创建待办模态框 -->
             <modal 
@@ -118,7 +134,8 @@ const TodoList = {
             isEditing: false,
             currentGroup: '',
             currentFilter: 'all',
-            showSettingsModal: false
+            showSettingsModal: false,
+            viewMode: 'list' // 'list' 或 'calendar'
         }
     },
     computed: {
