@@ -25,6 +25,7 @@ const TodoForm = {
                     required
                 >
             </div>
+
             <div class="form-group">
                 <label>截止日期</label>
                 <input 
@@ -32,6 +33,7 @@ const TodoForm = {
                     v-model="formData.deadline"
                 >
             </div>
+
             <div class="form-group">
                 <label>分组</label>
                 <select 
@@ -41,6 +43,7 @@ const TodoForm = {
                     <option v-for="group in groups" :value="group">{{ group }}</option>
                 </select>
             </div>
+
             <div class="form-group">
                 <label>标签</label>
                 <div class="tags-input">
@@ -65,6 +68,7 @@ const TodoForm = {
                     </div>
                 </div>
             </div>
+
             <div class="form-group">
                 <label>描述</label>
                 <textarea 
@@ -73,6 +77,7 @@ const TodoForm = {
                     placeholder="添加详细描述..."
                 ></textarea>
             </div>
+            
             <!-- 按钮 -->
             <div class="form-actions">
                 <button type="submit" class="save-btn">保存</button>

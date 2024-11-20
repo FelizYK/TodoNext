@@ -49,6 +49,7 @@ const TodoList = {
                             已完成
                         </button>
                     </div>
+                    
                     <div class="filter-group">
                         <select v-model="currentGroup">
                             <option value="">所有分组</option>
@@ -58,6 +59,7 @@ const TodoList = {
                         </select>
                     </div>
                 </div>
+
                 <!-- 待办列表 -->
                 <todo-item
                     v-for="todo in filteredTodos"
@@ -230,7 +232,7 @@ const TodoList = {
                 this.tagColors[tag] = color
             }
         },
-        updateGroups(newGroups, renamedGroups = {}) {
+        updateGroups(newGroups, renamedGroups) {
             // 保存新的分组列表
             this.groups = [...newGroups]
             
@@ -255,7 +257,7 @@ const TodoList = {
                 return todo
             })
         },
-        updateTags(tags, colors, renamedTags = {}) {
+        updateTags({ tags, colors, renamedTags }) {
             // 保存新的标签和颜色
             this.tags = [...tags]
             this.tagColors = { ...colors }

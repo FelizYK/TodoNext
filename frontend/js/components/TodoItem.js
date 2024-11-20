@@ -17,6 +17,7 @@ const TodoItem = {
                 >
                     ✔
                 </button>
+
                 <div class="todo-content" :class="{ completed: todo.completed }">
                     <div class="todo-header">
                         <span class="todo-text">
@@ -42,6 +43,7 @@ const TodoItem = {
                     </div>
                 </div>
             </div>
+            
             <button 
                 class="delete-btn" 
                 @click.stop="confirmDelete"

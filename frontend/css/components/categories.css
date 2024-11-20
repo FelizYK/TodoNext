@@ -1,65 +1,160 @@
 .categories-panel {
-    padding: 20px;
+    padding: 24px;
 }
 
+/* 页 */
 .categories-tabs {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
+    gap: 12px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #FFE5E5;
+    padding-bottom: 12px;
 }
 
 .categories-tabs button {
     padding: 8px 16px;
-    background: #f5f5f5;
+    background: #FFF5F5;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
+    color: #FF9999;
+    transition: all 0.3s ease;
+}
+
+.categories-tabs button:hover {
+    background: #FFE5E5;
 }
 
 .categories-tabs button.active {
-    background: #1890ff;
+    background: #FF9999;
     color: white;
 }
 
+/* 项 */
 .categories-content {
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 }
 
-.categories-panel input[type="text"],
-.categories-panel input[type="color"] {
-    padding: 6px;
-    border: 1px solid #ddd;
+.categories-content .add-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: white;
+    border: 1px solid #FFE5E5;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    padding-right: 100px;
+}
+
+.categories-content .add-item:hover {
+    border-color: #FFB3B3;
+    box-shadow: 0 2px 8px rgba(255, 153, 153, 0.1);
+}
+
+.categories-content .items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.categories-content .item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    background: white;
+    border: 1px solid #FFE5E5;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    padding-right: 100px;
+}
+
+.categories-content .item:hover {
+    border-color: #FFB3B3;
+    box-shadow: 0 2px 8px rgba(255, 153, 153, 0.1);
+}
+
+.categories-content input[type="text"] {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #666;
+    transition: all 0.3s ease;
+    background: transparent;
+}
+
+.categories-content input[type="text"]:focus {
+    outline: none;
+    background: white;
+    border: 1px solid #FF9999;
+    box-shadow: 0 0 0 3px rgba(255, 153, 153, 0.1);
+}
+
+.categories-content input[type="color"] {
+    width: 40px;
+    height: 34px;
+    padding: 0 2px;
+    border: 1px solid #FFE5E5;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+.categories-content input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+.categories-content input[type="color"]::-webkit-color-swatch {
+    border: none;
     border-radius: 4px;
 }
 
-.categories-panel input[type="text"] {
-    min-width: 200px;
+.categories-content .create {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 12px;
+    background: #FF9999;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.categories-panel .item input[type="text"] {
-    flex: 1;
+.categories-content .create:hover {
+    background: #FF8080;
+    transform: translateY(-50%) translateX(-2px);
+    box-shadow: 0 2px 8px rgba(255, 153, 153, 0.3);
 }
 
-.categories-panel button.primary {
-    background: #1890ff;
+.categories-content .delete {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 6px 12px;
+    background: transparent;
+    color: #FF9999;
+    border: 1px solid #FF9999;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.categories-panel button.primary:hover {
-    background: #40a9ff;
-}
-
-.categories-panel button.cancel {
-    background: #f5f5f5;
-    color: #666;
-}
-
-.categories-panel button.cancel:hover {
-    background: #e8e8e8;
-}
-
-.categories-panel button:disabled {
-    opacity: 0.7;
-    cursor: not-allowed;
+.categories-content .delete:hover {
+    background: #FFF5F5;
+    color: #FF8080;
+    border-color: #FF8080;
+    transform: translateY(-50%) translateX(-2px);
+    box-shadow: 0 2px 8px rgba(255, 77, 77, 0.3);
 }

@@ -9,10 +9,12 @@ const CalendarView = {
                 <h2>{{ currentYear }}年 {{ currentMonth + 1 }}月</h2>
                 <button @click="nextMonth">▶</button>
             </div>
+
             <div class="calendar-grid">
                 <div class="calendar-weekdays">
                     <div v-for="week in weeks" class="weekday">{{ week }}</div>
                 </div>
+                
                 <div class="calendar-days">
                     <div 
                         v-for="day in daysInMonth" 
