@@ -1,0 +1,6 @@
+const app = Vue.createApp({})
+app.component('modal', Modal)
+app.component('todo-form', TodoForm)
+app.component('todo-item', TodoItem)
+app.component('todo-list', TodoList)
+app.mount('#app')
