@@ -1,5 +1,11 @@
 const TodoItem = {
-    props: ['todo'],
+    props: {
+        todo: Object,
+        tagColors: {
+            type: Object,
+            default: () => ({})
+        }
+    },
     template: `
         <div class="todo-item" @click="$emit('view', todo)">
             <div class="todo-main">
@@ -58,14 +64,7 @@ const TodoItem = {
     },
     methods: {
         getTagColor(tag) {
-            // 简单的标签颜色映射
-            const colors = {
-                '重要': '#ff4d4f',
-                '工作': '#1890ff',
-                '个人': '#52c41a',
-                '学习': '#722ed1'
-            }
-            return colors[tag] || '#666'
+            return this.tagColors[tag] || '#666666'
         }
     }
 }
