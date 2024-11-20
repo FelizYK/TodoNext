@@ -106,23 +106,25 @@ const TodoList = {
         }
     },
     methods: {
-        saveTodo() {
+        saveTodo(formData) {
             if (this.isEditing) {
-                const index = this.todos.findIndex(t => t.id === this.editingId)
+                const index = this.todos.findIndex(t => t.id === this.currentTodo.id)
                 if (index !== -1) {
                     this.todos[index] = {
                         ...this.todos[index],
-                        ...todoData
+                        ...formData
                     }
                 }
             } else {
                 this.todos.push({
                     id: Date.now(),
                     completed: false,
-                    ...todoData
+                    ...formData
                 })
             }
             this.closeCreateModal()
+            
+            console.log('保存成功：', this.todos)
         },
         viewTodo(todo) {
             this.currentTodo = todo

@@ -60,7 +60,7 @@ const TodoForm = {
             </div>
 
             <div class="form-actions">
-                <button type="submit">{{ isEditing ? '保存' : '创建' }}</button>
+                <button type="button" @click="saveTodo">{{ isEditing ? '保存' : '创建' }}</button>
                 <button type="button" class="cancel" @click="$emit('cancel')">取消</button>
             </div>
         </form>
@@ -86,7 +86,18 @@ const TodoForm = {
     },
     methods: {
         saveTodo() {
+            if (!this.formData.text.trim()) {
+                alert('请输入标题！')
+                return
+            }
+            
+            if (!Array.isArray(this.formData.tags)) {
+                this.formData.tags = []
+            }
+
             this.$emit('save', { ...this.formData })
+            
+            console.log('保存的数据：', this.formData)
         },
         removeTag(tag) {
             this.formData.tags = this.formData.tags.filter(t => t !== tag)
@@ -95,6 +106,9 @@ const TodoForm = {
     watch: {
         selectedTag(tag) {
             if (tag && !this.formData.tags.includes(tag)) {
+                if (!Array.isArray(this.formData.tags)) {
+                    this.formData.tags = []
+                }
                 this.formData.tags.push(tag)
                 this.selectedTag = ''
             }
@@ -103,6 +117,9 @@ const TodoForm = {
             handler(newTodo) {
                 if (newTodo) {
                     this.formData = { ...newTodo }
+                    if (!Array.isArray(this.formData.tags)) {
+                        this.formData.tags = []
+                    }
                 }
             },
             deep: true
