@@ -64,13 +64,11 @@
 /* 取消按钮 */
 .cancel-btn {
     background-color: white;
-    border: 1px solid #FFE5E5;
     color: #FF9999;
 }
 
 .cancel-btn:hover {
     background-color: #FFF5F5;
-    border-color: #FF9999;
     transform: translateY(-1px);
 }
 
@@ -85,4 +83,31 @@
     cursor: not-allowed;
     transform: none !important;
     box-shadow: none !important;
+}
+
+/* 输入框 */
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #FFE5E5;
+    border-radius: 8px;
+    color: #666;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #FF9999;
+    box-shadow: 0 0 0 3px rgba(255, 153, 153, 0.1);
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: #FFB3B3;
 }
