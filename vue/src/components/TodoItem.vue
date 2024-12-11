@@ -1,4 +1,3 @@
-<!-- src/components/TodoItem.vue -->
 <template>
   <div class="todo-item" @click="$emit('view', todo)">
     <div class="todo-main">

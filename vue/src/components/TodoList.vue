@@ -85,7 +85,11 @@
     </modal>
 
     <!-- 创建待办模态框 -->
-    <modal :show="showCreateModal" title="创建待办" @close="closeCreateModal">
+    <modal
+      :show="showCreateModal"
+      title="创建待办"
+      @close="closeCreateModal"
+    >
       <todo-form
         :todo="null"
         :groups="groups"
@@ -140,7 +144,7 @@ export default {
       tags: JSON.parse(localStorage.getItem('tags') || '["重要", "长期"]'),
       tagColors: JSON.parse(
         localStorage.getItem('tagColors') ||
-          '{"重要":"#ff4d4f","长期":"#1890ff"}'
+          '{"重要": "#ff4d4f", "长期": "#1890ff"}'
       ),
       currentTodo: null,
       // modal
@@ -176,6 +180,23 @@ export default {
   },
   methods: {
     // todo
+    viewTodo(todo) {
+      this.currentTodo = { ...todo };
+      this.showViewModal = true;
+    },
+    toggleTodo(todo) {
+      const index = this.todos.findIndex((t) => t.id === todo.id);
+      if (index !== -1) {
+        // 切换完成状态
+        this.todos[index].completed = !this.todos[index].completed;
+      }
+    },
+    deleteTodo(todo) {
+      const index = this.todos.findIndex((t) => t.id === todo.id);
+      if (index !== -1) {
+        this.todos.splice(index, 1);
+      }
+    },
     saveTodo(formData) {
       if (this.currentTodo) {
         // 编辑现有待办
@@ -194,27 +215,9 @@ export default {
           ...formData,
         });
       }
-
       // 关闭所有模态框
       this.closeViewModal();
       this.closeCreateModal();
-    },
-    viewTodo(todo) {
-      this.currentTodo = { ...todo };
-      this.showViewModal = true;
-    },
-    deleteTodo(todo) {
-      const index = this.todos.findIndex((t) => t.id === todo.id);
-      if (index !== -1) {
-        this.todos.splice(index, 1);
-      }
-    },
-    toggleTodo(todo) {
-      const index = this.todos.findIndex((t) => t.id === todo.id);
-      if (index !== -1) {
-        // 切换完成状态
-        this.todos[index].completed = !this.todos[index].completed;
-      }
     },
     // modal
     closeCreateModal() {
