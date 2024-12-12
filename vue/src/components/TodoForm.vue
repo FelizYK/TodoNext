@@ -91,12 +91,6 @@ export default {
         description: '',
       },
       selectedTag: '',
-      newTag: '',
-      newTagColor: '#666666',
-      newGroup: '',
-      showNewTagInput: false,
-      showNewGroupInput: false,
-      newTags: [],
     };
   },
   created() {
@@ -109,17 +103,14 @@ export default {
   },
   methods: {
     saveTodo() {
+      // 检查标题不为空
       if (!this.formData.text.trim()) {
         alert('请输入标题！');
         return;
       }
-      if (!Array.isArray(this.formData.tags)) {
-        this.formData.tags = [];
-      }
-      // 发送表单数据和新标签信息
+      // 发送表单数据
       this.$emit('save', {
-        ...this.formData,
-        newTags: this.newTags,
+        ...this.formData
       });
     },
     removeTag(tag) {
@@ -131,18 +122,9 @@ export default {
   },
   watch: {
     selectedTag(tag) {
-      if (tag === '__new__') {
-        this.showNewTagInput = true;
-        this.selectedTag = '';
-      } else if (tag && !this.formData.tags.includes(tag)) {
+      if (tag && !this.formData.tags.includes(tag)) {
         this.formData.tags.push(tag);
         this.selectedTag = '';
-      }
-    },
-    'formData.group'(group) {
-      if (group === '__new__') {
-        this.showNewGroupInput = true;
-        this.formData.group = '';
       }
     },
   },
