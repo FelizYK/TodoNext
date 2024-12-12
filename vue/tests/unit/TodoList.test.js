@@ -4,10 +4,24 @@ import TodoList from '../../src/components/TodoList.vue';
 
 describe('Todo List Tests', () => {
     let wrapper;
+    let localStorage;
 
     beforeEach(async () => {
-        wrapper = mount(TodoList);
+        localStorage = {
+            store: {},
+            getItem: vi.fn((key) => JSON.stringify(this.store[key] || '[]')),
+            setItem: vi.fn((key, value) => { this.store[key] = value; }),
+            clear: vi.fn(() => { this.store = {}; }),
+        };
+        wrapper = mount(TodoList, {
+            global: {
+                provide: {
+                    localStorage: localStorage
+                }
+            }
+        });
         await wrapper.vm.$nextTick();
+        wrapper.vm.todos = []; // 重置 todos 数组
     });
 
     // 1. 测试初始状态
@@ -53,6 +67,7 @@ describe('Todo List Tests', () => {
         // 创建待办
         await wrapper.vm.saveTodo({ text: '待删除的待办' });
         const todo = wrapper.vm.todos[0];
+        expect(wrapper.vm.todos).toHaveLength(1);
         // 删除待办
         await wrapper.vm.deleteTodo(todo);
         expect(wrapper.vm.todos).toHaveLength(0);
