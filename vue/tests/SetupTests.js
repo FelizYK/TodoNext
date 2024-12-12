@@ -1,10 +1,10 @@
-import { JSDOM } from 'jsdom';
-const { window } = new JSDOM('<!doctype html><html><body></body></html>');
+// import { JSDOM } from 'jsdom';
+// const { window } = new JSDOM('<!doctype html><html><body></body></html>');
 
-global.window = window;
-global.document = window.document;
-global.SVGElement = class {};
-global.Element = class {};
+// global.window = window;
+// global.document = window.document;
+// global.SVGElement = class {};
+// global.Element = class {};
 
 beforeEach(() => {
   global.confirm = vi.fn(() => true); // 模拟 confirm 函数
