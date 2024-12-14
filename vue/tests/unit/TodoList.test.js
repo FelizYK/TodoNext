@@ -230,10 +230,10 @@ describe('Todo List Tests', () => {
     });
 
     // 8. 测试视图切换
-    it('should switch between list and calendar view', () => {
-        // 列表视图 -> 日历视图
-        expect(wrapper.vm.viewMode).toBe('list');
-        wrapper.vm.viewMode = 'calendar';
+    it('should switch between list and calendar view', async () => {
+        const viewToggle = wrapper.find('.view-toggle');
+        expect(viewToggle.exists()).toBe(true);
+        await viewToggle.trigger('click');
         expect(wrapper.vm.viewMode).toBe('calendar');
     });
 });
