@@ -138,6 +138,7 @@ export default {
   data() {
     return {
       todos: JSON.parse(localStorage.getItem('todos') || '[]'),
+      maxTodos: 10000,
       groups: JSON.parse(
         localStorage.getItem('groups') || '["工作", "学习", "生活", "其他"]'
       ),
@@ -209,11 +210,15 @@ export default {
         }
       } else {
         // 创建新待办
-        this.todos.push({
-          id: Date.now(),
-          completed: false,
-          ...formData,
-        });
+        if (this.todos.length < this.maxTodos) {
+          this.todos.push({
+            id: Date.now(),
+            completed: false,
+            ...formData,
+          });
+        } else {
+          alert('超过最大待办数量！');
+        }
       }
       // 关闭所有模态框
       this.closeViewModal();
