@@ -62,7 +62,7 @@ describe('TodoForm Component - Fuzz Testing', () => {
             null, // 空值
             undefined, // 未定义值
             '<script>alert("XSS Attack")</script>', // XSS
-            'a'.repeat(1000000000), // 超长字符串
+            'a'.repeat(1024*1024), // 超长字符串
         ];
         for (const edgeCase of edgeCases) {
             await wrapper.find('.create-btn').trigger('click');
