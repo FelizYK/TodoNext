@@ -103,6 +103,10 @@ export default {
   },
   methods: {
     saveTodo() {
+      if (!this.formData || !this.formData.text) {
+        alert('请输入标题！');
+        return;
+      }
       // 检查标题不为空
       if (!this.formData.text.trim()) {
         alert('请输入标题！');
